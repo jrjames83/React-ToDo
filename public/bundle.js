@@ -19842,41 +19842,53 @@
 	var React = __webpack_require__(8);
 	var ReactDOM = __webpack_require__(165);
 	var TodoList = __webpack_require__(167);
+	var AddTodo = __webpack_require__(238);
 
 	var TodoApp = React.createClass({
-					getInitialState: function getInitialState() {
-									return {
-													todos: [{
-																	id: 1,
-																	text: "Walk Chance"
-													}, {
-																	id: 2,
-																	text: "Go To Whole Foods"
-													}, {
-																	id: 3,
-																	text: "Hit RedRocks"
-													}, {
-																	id: 4,
-																	text: "Do Some Work"
-													}]
-									};
-					},
+	  getInitialState: function getInitialState() {
+	    return {
+	      todos: [{
+	        id: 1,
+	        text: "Walk Chance"
+	      }, {
+	        id: 2,
+	        text: "Go To Whole Foods"
+	      }, {
+	        id: 3,
+	        text: "Hit RedRocks"
+	      }, {
+	        id: 4,
+	        text: "Do Some Work"
+	      }]
+	    };
+	  },
 
-					displayName: 'TodoApp',
-					render: function render() {
-									var todos = this.state.todos;
+	  displayName: 'TodoApp',
+	  handleAddTodo: function handleAddTodo(item) {
+	    var newArray = this.state.todos.slice();
+	    newArray.push({ id: newArray.length + 1, text: item });
+	    this.setState({ todos: newArray });
+	    console.log(item);
+	  },
+	  render: function render() {
+	    var todos = this.state.todos;
 
-									return React.createElement(
-													'div',
-													null,
-													React.createElement(
-																	'h1',
-																	null,
-																	'Todo App.jsx'
-													),
-													React.createElement(TodoList, { todos: todos })
-									);
-					}
+	    return React.createElement(
+	      'div',
+	      { className: 'small-2 large-4 columns' },
+	      React.createElement(
+	        'div',
+	        { className: 'row' },
+	        React.createElement(
+	          'h1',
+	          null,
+	          'Todo App.jsx'
+	        ),
+	        React.createElement(TodoList, { todos: todos }),
+	        React.createElement(AddTodo, { addTodo: this.handleAddTodo })
+	      )
+	    );
+	  }
 	});
 
 	module.exports = TodoApp;
@@ -25979,6 +25991,44 @@
 	});
 
 	module.exports = Todo;
+
+/***/ },
+/* 238 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var React = __webpack_require__(8);
+
+	// Create a static component
+	// Take some text, when form is submitted
+	// call a function that gets passed in as a prop
+
+	var AddTodo = React.createClass({
+	    displayName: 'AddTodo',
+
+	    handleSubmit: function handleSubmit() {
+	        var item = this.refs.query.value;
+	        if (item.length > 0) {
+	            this.props.addTodo(item);
+	            this.refs.query.value = "";
+	        }
+	    },
+	    render: function render() {
+	        return React.createElement(
+	            'div',
+	            null,
+	            React.createElement('input', { type: 'text', ref: 'query', placeholder: 'add to do' }),
+	            React.createElement(
+	                'button',
+	                { className: 'button', onClick: this.handleSubmit },
+	                'Add'
+	            )
+	        );
+	    }
+	});
+
+	module.exports = AddTodo;
 
 /***/ }
 /******/ ]);
