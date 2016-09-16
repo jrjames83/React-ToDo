@@ -19843,52 +19843,78 @@
 	var ReactDOM = __webpack_require__(165);
 	var TodoList = __webpack_require__(167);
 	var AddTodo = __webpack_require__(238);
+	var Search = __webpack_require__(239);
 
 	var TodoApp = React.createClass({
-	  getInitialState: function getInitialState() {
-	    return {
-	      todos: [{
-	        id: 1,
-	        text: "Walk Chance"
-	      }, {
-	        id: 2,
-	        text: "Go To Whole Foods"
-	      }, {
-	        id: 3,
-	        text: "Hit RedRocks"
-	      }, {
-	        id: 4,
-	        text: "Do Some Work"
-	      }]
-	    };
-	  },
+	    getInitialState: function getInitialState() {
+	        return {
+	            todos: [{
+	                id: 1,
+	                text: "Walk Chance"
+	            }, {
+	                id: 2,
+	                text: "Go To Whole Foods"
+	            }, {
+	                id: 3,
+	                text: "Hit RedRocks"
+	            }, {
+	                id: 4,
+	                text: "Do Some Work"
+	            }]
+	        };
+	    },
 
-	  displayName: 'TodoApp',
-	  handleAddTodo: function handleAddTodo(item) {
-	    var newArray = this.state.todos.slice();
-	    newArray.push({ id: newArray.length + 1, text: item });
-	    this.setState({ todos: newArray });
-	    console.log(item);
-	  },
-	  render: function render() {
-	    var todos = this.state.todos;
+	    displayName: 'TodoApp',
 
-	    return React.createElement(
-	      'div',
-	      { className: 'small-2 large-4 columns' },
-	      React.createElement(
-	        'div',
-	        { className: 'row' },
-	        React.createElement(
-	          'h1',
-	          null,
-	          'Todo App.jsx'
-	        ),
-	        React.createElement(TodoList, { todos: todos }),
-	        React.createElement(AddTodo, { addTodo: this.handleAddTodo })
-	      )
-	    );
-	  }
+	    filterTodos: function filterTodos(value) {
+	        console.log("Hi it's the main component: ", value);
+	        // Remove elements from state which do not contain string
+
+	        // this.state.todos.map(function(todo) {
+	        // 	if(todo.text.includes(value)) {
+	        // 		console.log(todo.text, " Is a match!")
+	        // 	}
+	        // })
+
+	        // Now figure out how to undo the filter....
+	        // Maybe put this logic in compnent did update?
+	        // Or component will update?
+	        this.setState({ todos: this.state.todos }); // did NOT work...
+	        var updated = this.state.todos.filter(function (val) {
+	            return val.text.includes(value);
+	        });
+
+	        this.setState({ todos: updated });
+	    },
+	    componentDidUpdate: function componentDidUpdate(prevProps, prevState) {
+	        console.log("comp updated");
+	    },
+	    handleAddTodo: function handleAddTodo(item) {
+	        var newArray = this.state.todos.slice();
+	        newArray.push({ id: newArray.length + 1, text: item });
+	        this.setState({ todos: newArray });
+	        console.log(item);
+	    },
+	    render: function render() {
+	        var todos = this.state.todos;
+
+	        return React.createElement(
+	            'div',
+	            { className: 'medium-6 large-4 columns small-centered' },
+	            React.createElement(
+	                'div',
+	                { className: 'row' },
+	                React.createElement(
+	                    'h1',
+	                    null,
+	                    'Todo App.jsx'
+	                ),
+	                React.createElement(Search, { sendFilter: this.filterTodos }),
+	                React.createElement(TodoList, { todos: todos }),
+	                React.createElement(AddTodo, { addTodo: this.handleAddTodo })
+	            )
+	        );
+	    }
 	});
 
 	module.exports = TodoApp;
@@ -26021,7 +26047,7 @@
 	            React.createElement('input', { type: 'text', ref: 'query', placeholder: 'add to do' }),
 	            React.createElement(
 	                'button',
-	                { className: 'button', onClick: this.handleSubmit },
+	                { className: 'button primary', onClick: this.handleSubmit },
 	                'Add'
 	            )
 	        );
@@ -26029,6 +26055,32 @@
 	});
 
 	module.exports = AddTodo;
+
+/***/ },
+/* 239 */
+/***/ function(module, exports, __webpack_require__) {
+
+	'use strict';
+
+	var React = __webpack_require__(8);
+
+	var Search = React.createClass({
+	    displayName: 'Search',
+	    handleChange: function handleChange(event) {
+	        //console.log(event.target.value);
+	        this.props.sendFilter(event.target.value);
+	    },
+	    render: function render() {
+	        return React.createElement(
+	            'div',
+	            null,
+	            React.createElement('input', { type: 'text', ref: 'query', placeholder: 'filter',
+	                onChange: this.handleChange })
+	        );
+	    }
+	});
+
+	module.exports = Search;
 
 /***/ }
 /******/ ]);
