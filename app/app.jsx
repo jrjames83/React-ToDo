@@ -1,5 +1,6 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
+var TodoApp = require('TodoApp');
 var {Route, Router, IndexRoute, hashHistory} = require('react-router');
 
 
@@ -30,6 +31,6 @@ http://api.openweathermap.org/data/2.5/weather
 // );
 
 ReactDOM.render(
-	<p>Boilerplate3 Project </p>,
+	<TodoApp />,
 	document.getElementById('app')
 	)
