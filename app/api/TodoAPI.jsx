@@ -18,9 +18,27 @@ module.exports = {
 		} catch (e) {
 			// OK
 		}
-
 		return $.isArray(todos) ? todos : [];
 
+	},
+
+	filterTodos: function(todos, showCompleted, searchFilter) {
+		var filterTodos = todos;
+
+		// filter by showCompleted
+		filterTodos = filterTodos.filter(function(val) {
+			return !val.completed || showCompleted;
+		})
+
+		// filter by searchFilter
+		filterTodos = filterTodos.filter(function(val) {
+			return val.text.toLowerCase().includes(searchFilter.toLowerCase())
+		})		
+
+		// sort todos - incomplete up on list
+
+
+		return filterTodos
 	}
 };
 

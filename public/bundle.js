@@ -19850,36 +19850,14 @@
 	var TodoAPI = __webpack_require__(194);
 
 	var TodoApp = React.createClass({
+	    displayName: 'TodoApp',
 	    getInitialState: function getInitialState() {
 	        return {
 	            todos: TodoAPI.getTodos(),
-
-	            // [
-	            // 	{
-	            // 		id: uuid(),
-	            // 		text: "Walk Chance",
-	            // 		completed: true
-	            // 	},	        	{
-	            // 		id: uuid(),
-	            // 		text: "Go To Whole Foods",
-	            // 		completed: false
-	            // 	},	        	{
-	            // 		id: uuid(),
-	            // 		text: "Hit RedRocks",
-	            // 		completed: false
-	            // 	},	        	{
-	            // 		id: uuid(),
-	            // 		text: "Do Some Work",
-	            // 		completed: false
-	            // 	}
-	            // ],
 	            searchFilter: '',
 	            completed: false
 	        };
 	    },
-
-	    displayName: 'TodoApp',
-
 	    handleSearch: function handleSearch(completed, value) {
 	        this.setState({
 	            searchFilter: value.toLowerCase(),
@@ -19888,6 +19866,7 @@
 	    },
 	    componentDidUpdate: function componentDidUpdate(prevProps, prevState) {
 	        TodoAPI.setTodos(this.state.todos);
+	        //console.log("i updated")
 	    },
 	    handleAddTodo: function handleAddTodo(item) {
 
@@ -19898,9 +19877,6 @@
 	                completed: false
 	            }])
 	        });
-	        // var newArray = this.state.todos.slice();
-	        // newArray.push({id: uuid(), text:item})
-	        // this.setState({todos: newArray}) 
 	    },
 
 
@@ -19918,31 +19894,25 @@
 
 	        this.setState({ todos: updatedTodos });
 	    },
-
-
-	    // What I did below: since the value of the filter box
-	    // Is really parat of the state, I added it to the state
-	    // Then if I use the filter, it conditionally renders to-do's
-	    // Based on an eval of a filter call on the todos array
-	    // Before, I was restricting the state, but never giving it
-	    // A chance to re-render itself
 	    render: function render() {
-	        var _this = this;
-
 	        var _state = this.state;
 	        var todos = _state.todos;
 	        var searchFilter = _state.searchFilter;
+	        var completed = _state.completed;
 
+	        var filteredTodos = TodoAPI.filterTodos(todos, completed, searchFilter);
 
-	        var filterRender = function filterRender() {
-	            if (searchFilter.length > 0) {
-	                return _this.state.todos.filter(function (val) {
-	                    return val.text.toLowerCase().includes(searchFilter);
-	                });
-	            } else {
-	                return todos;
-	            }
-	        };
+	        // Now factored into the TodoAPI file
+	        // var filterRender = () => {
+	        // 	if(searchFilter.length > 0) {
+	        // 		return this.state.todos.filter(function(val) {
+	        // 			return val.text.toLowerCase().includes(searchFilter)
+	        // 		})
+	        // 	} else {
+	        // 		return todos
+	        // 	}
+	        // }
+
 
 	        // Conditionally render based on searchFilter here
 	        return React.createElement(
@@ -19957,7 +19927,7 @@
 	                    'Todo App.jsx'
 	                ),
 	                React.createElement(Search, { sendFilter: this.handleSearch }),
-	                React.createElement(TodoList, { todos: filterRender(), onToggle: this.handleToggle }),
+	                React.createElement(TodoList, { todos: filteredTodos, onToggle: this.handleToggle }),
 	                React.createElement(AddTodo, { addTodo: this.handleAddTodo })
 	            )
 	        );
@@ -24426,8 +24396,26 @@
 			} catch (e) {
 				// OK
 			}
-
 			return $.isArray(todos) ? todos : [];
+		},
+
+		filterTodos: function filterTodos(todos, showCompleted, searchFilter) {
+			var filterTodos = todos;
+
+			// filter by showCompleted
+			filterTodos = filterTodos.filter(function (val) {
+				return !val.completed || showCompleted;
+			});
+
+			// filter by searchFilter
+			filterTodos = filterTodos.filter(function (val) {
+				return val.text.toLowerCase().includes(searchFilter.toLowerCase());
+			});
+
+			// sort todos - incomplete up on list
+
+
+			return filterTodos;
 		}
 	};
 
