@@ -3,53 +3,53 @@ var ReactDOM = require('react-dom');
 var TodoList = require('TodoList');
 var AddTodo = require('addTodo');
 var Search = require('Search');
-
+var uuid = require('node-uuid');
 
 var TodoApp = React.createClass({
 	getInitialState() {
 	    return {
 	        todos: [
 	        	{
-	        		id: 1,
+	        		id: uuid(),
 	        		text: "Walk Chance"
 	        	},	        	{
-	        		id: 2,
+	        		id: uuid(),
 	        		text: "Go To Whole Foods"
 	        	},	        	{
-	        		id: 3,
+	        		id: uuid(),
 	        		text: "Hit RedRocks"
 	        	},	        	{
-	        		id: 4,
+	        		id: uuid(),
 	        		text: "Do Some Work"
 	        	}
 	        ],
-	        searchFilter: ''  
+	        searchFilter: '',
+	        completed: false  
 	    };	
 	},
     displayName: 'TodoApp',
 
-    filterTodos(value) {
-
-    	// Update the state
-    	this.setState({searchFilter:value})
-
-    	/* How do you check for backspacing?
-    	var updated = this.state.todos.filter(function(val) {
-    		return val.text.includes(value);
-    	});
-
-    	this.setState({todos:updated});  */
-
+    handleSearch(completed, value) {
+    	this.setState({
+    		searchFilter:value.toLowerCase(),
+    		completed: completed
+    	})
     },
 
 
     handleAddTodo(item) {
     	var newArray = this.state.todos.slice();
-    	newArray.push({id: newArray.length + 1, text:item})
+    	newArray.push({id: uuid(), text:item})
     	this.setState({todos: newArray}) 
-    	console.log(item);
     },
 
+
+    // What I did below: since the value of the filter box
+    // Is really parat of the state, I added it to the state
+    // Then if I use the filter, it conditionally renders to-do's
+    // Based on an eval of a filter call on the todos array
+    // Before, I was restricting the state, but never giving it
+    // A chance to re-render itself
     render() {
     	var {todos, searchFilter} = this.state;
 
@@ -57,7 +57,7 @@ var TodoApp = React.createClass({
     	var filterRender = () => {
     		if(searchFilter.length > 0) {
     			return this.state.todos.filter(function(val) {
-    				return val.text.includes(searchFilter)
+    				return val.text.toLowerCase().includes(searchFilter)
     			})
     		} else {
     			return todos
@@ -70,7 +70,7 @@ var TodoApp = React.createClass({
         	<div className="medium-6 large-4 columns small-centered">
              <div className="row">
              <h1>Todo App.jsx</h1>
-             	<Search sendFilter={this.filterTodos}/>
+             	<Search sendFilter={this.handleSearch}/>
             	<TodoList todos={filterRender()} />
             	<AddTodo addTodo={this.handleAddTodo} />
              </div>

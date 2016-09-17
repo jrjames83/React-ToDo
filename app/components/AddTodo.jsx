@@ -13,6 +13,8 @@ var AddTodo = React.createClass({
     	if (item.length > 0) {
     		this.props.addTodo(item);
     		this.refs.query.value = "";
+    	} else {
+    		this.refs.query.focus();
     	}
     	
     },
@@ -20,7 +22,7 @@ var AddTodo = React.createClass({
         return (
             <div>
             	<input type="text" ref="query" placeholder="add to do" />
-            	<button className="button primary" onClick={this.handleSubmit}>Add</button>
+            	<button className="button expanded" onClick={this.handleSubmit}>Add</button>
             </div>
         );
     }
