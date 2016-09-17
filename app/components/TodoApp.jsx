@@ -11,16 +11,20 @@ var TodoApp = React.createClass({
 	        todos: [
 	        	{
 	        		id: uuid(),
-	        		text: "Walk Chance"
+	        		text: "Walk Chance",
+	        		completed: true
 	        	},	        	{
 	        		id: uuid(),
-	        		text: "Go To Whole Foods"
+	        		text: "Go To Whole Foods",
+	        		completed: false
 	        	},	        	{
 	        		id: uuid(),
-	        		text: "Hit RedRocks"
+	        		text: "Hit RedRocks",
+	        		completed: false
 	        	},	        	{
 	        		id: uuid(),
-	        		text: "Do Some Work"
+	        		text: "Do Some Work",
+	        		completed: false
 	        	}
 	        ],
 	        searchFilter: '',
@@ -38,9 +42,36 @@ var TodoApp = React.createClass({
 
 
     handleAddTodo(item) {
-    	var newArray = this.state.todos.slice();
-    	newArray.push({id: uuid(), text:item})
-    	this.setState({todos: newArray}) 
+
+    	this.setState({
+    		todos: [
+    		...this.state.todos,
+	    		{
+	    			id: uuid(),
+	    			text: item,
+	    			completed: false
+	    		}
+    		]
+    	})
+    	// var newArray = this.state.todos.slice();
+    	// newArray.push({id: uuid(), text:item})
+    	// this.setState({todos: newArray}) 
+    },
+
+    // The ID is passed 2 comonents earlier
+    handleToggle(id) {
+
+    	var updatedTodos = this.state.todos.map(function(todo) {
+    		// Updated where the todo id matches
+    		if (todo.id === id) {
+    			todo.completed = !todo.completed;
+    			console.log('updated');
+    		}
+    		return todo
+    	})
+
+    	this.setState({todos: updatedTodos});
+
     },
 
 
@@ -71,7 +102,7 @@ var TodoApp = React.createClass({
              <div className="row">
              <h1>Todo App.jsx</h1>
              	<Search sendFilter={this.handleSearch}/>
-            	<TodoList todos={filterRender()} />
+            	<TodoList todos={filterRender()} onToggle={this.handleToggle} />
             	<AddTodo addTodo={this.handleAddTodo} />
              </div>
             </div>

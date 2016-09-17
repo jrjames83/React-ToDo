@@ -19839,6 +19839,8 @@
 
 	'use strict';
 
+	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
+
 	var React = __webpack_require__(8);
 	var ReactDOM = __webpack_require__(165);
 	var TodoList = __webpack_require__(236);
@@ -19851,16 +19853,20 @@
 	    return {
 	      todos: [{
 	        id: uuid(),
-	        text: "Walk Chance"
+	        text: "Walk Chance",
+	        completed: true
 	      }, {
 	        id: uuid(),
-	        text: "Go To Whole Foods"
+	        text: "Go To Whole Foods",
+	        completed: false
 	      }, {
 	        id: uuid(),
-	        text: "Hit RedRocks"
+	        text: "Hit RedRocks",
+	        completed: false
 	      }, {
 	        id: uuid(),
-	        text: "Do Some Work"
+	        text: "Do Some Work",
+	        completed: false
 	      }],
 	      searchFilter: '',
 	      completed: false
@@ -19876,9 +19882,33 @@
 	    });
 	  },
 	  handleAddTodo: function handleAddTodo(item) {
-	    var newArray = this.state.todos.slice();
-	    newArray.push({ id: uuid(), text: item });
-	    this.setState({ todos: newArray });
+
+	    this.setState({
+	      todos: [].concat(_toConsumableArray(this.state.todos), [{
+	        id: uuid(),
+	        text: item,
+	        completed: false
+	      }])
+	    });
+	    // var newArray = this.state.todos.slice();
+	    // newArray.push({id: uuid(), text:item})
+	    // this.setState({todos: newArray}) 
+	  },
+
+
+	  // The ID is passed 2 comonents earlier
+	  handleToggle: function handleToggle(id) {
+
+	    var updatedTodos = this.state.todos.map(function (todo) {
+	      // Updated where the todo id matches
+	      if (todo.id === id) {
+	        todo.completed = !todo.completed;
+	        console.log('updated');
+	      }
+	      return todo;
+	    });
+
+	    this.setState({ todos: updatedTodos });
 	  },
 
 
@@ -19919,7 +19949,7 @@
 	          'Todo App.jsx'
 	        ),
 	        React.createElement(Search, { sendFilter: this.handleSearch }),
-	        React.createElement(TodoList, { todos: filterRender() }),
+	        React.createElement(TodoList, { todos: filterRender(), onToggle: this.handleToggle }),
 	        React.createElement(AddTodo, { addTodo: this.handleAddTodo })
 	      )
 	    );
@@ -25982,12 +26012,15 @@
 	var TodoList = React.createClass({
 	    displayName: 'TodoList',
 	    render: function render() {
+	        var _this = this;
+
 	        var todos = this.props.todos;
 
+	        // This.props.ontoggle is passed up to the parent
 
 	        var renderTodos = function renderTodos() {
 	            return todos.map(function (todo) {
-	                return React.createElement(Todo, _extends({ key: todo.id }, todo));
+	                return React.createElement(Todo, _extends({ key: todo.id }, todo, { onToggle: _this.props.onToggle }));
 	            });
 	        };
 	        return React.createElement(
@@ -26010,14 +26043,25 @@
 
 	var Todo = React.createClass({
 	    displayName: 'Todo',
+	    handleCheck: function handleCheck(e) {
+	        console.log(e.target.value);
+	    },
 	    render: function render() {
+	        var _this = this;
+
 	        var _props = this.props;
 	        var text = _props.text;
 	        var id = _props.id;
+	        var completed = _props.completed;
+
 
 	        return React.createElement(
 	            'div',
-	            null,
+	            { onClick: function onClick() {
+	                    _this.props.onToggle(id);
+	                    console.log(id);
+	                } },
+	            React.createElement('input', { type: 'checkbox', defaultChecked: completed }),
 	            text
 	        );
 	    }

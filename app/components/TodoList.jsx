@@ -6,10 +6,11 @@ var TodoList = React.createClass({
     render() {
     	var {todos} = this.props;
 
+        // This.props.ontoggle is passed up to the parent
     	var renderTodos = () => {
     		return todos.map((todo) => {
     			return (
-    				<Todo key={todo.id} {...todo} />
+    				<Todo key={todo.id} {...todo} onToggle={this.props.onToggle} />
     				)
     		});
     	};
