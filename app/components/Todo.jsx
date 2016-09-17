@@ -5,19 +5,20 @@ var Todo = React.createClass({
     handleCheck(e) {
     	console.log(e.target.value);
     },
+    handleChange(e) {
+        console.log(e.target.checked, this.props.id);
+        this.props.onToggle(this.props.id)
+    },
     render() {
     	var {text, id, completed} = this.props;
-        
-        return (
-            <div onClick={ () => {
-            	this.props.onToggle(id)
-            	console.log(id)
-            }}>
 
-            <input type="checkbox" defaultChecked={completed} />
-            	{text}
-            
-            </div>
+        return (
+
+        <div>
+         <input type="checkbox" onChange={this.handleChange} 
+                            defaultChecked={completed} />	
+          {text}
+        </div>
         );
     }
 });

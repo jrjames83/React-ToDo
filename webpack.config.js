@@ -27,7 +27,8 @@ module.exports = {
     root: __dirname,
     modulesDirectories: [
       "node_modules", 
-      "./app/components" // avoid importing each component
+      "./app/components", // avoid importing each component
+      "./app/api" // avoid importing each component
     ],
     alias: {
 
