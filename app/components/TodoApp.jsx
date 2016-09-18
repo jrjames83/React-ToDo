@@ -36,7 +36,9 @@ var TodoApp = React.createClass({
 	    		{
 	    			id: uuid(),
 	    			text: item,
-	    			completed: false
+	    			completed: false,
+	    			createdAt: moment().unix(),
+	    			completedAt: null
 	    		}
     		]
     	})
@@ -49,6 +51,7 @@ var TodoApp = React.createClass({
     		// Updated where the todo id matches
     		if (todo.id === id) {
     			todo.completed = !todo.completed;
+    			todo.completedAt = moment().unix();
     			console.log('updated');
     		}
     		return todo
@@ -75,8 +78,9 @@ var TodoApp = React.createClass({
 
 
     	// Conditionally render based on searchFilter here
+    	// Elements from the state controlled here are passed down as props
         return (
-        	<div className="medium-6 large-4 columns small-centered">
+        	<div className="medium-4 large-6 columns small-centered">
              <div className="row">
              <h1>Todo App.jsx</h1>
              	<Search sendFilter={this.handleSearch}/>
