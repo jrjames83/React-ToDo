@@ -1,5 +1,7 @@
 var $ = require('jquery');
+var moment = require('moment');
 
+// Would be nice to avoid duplicates
 
 module.exports = {
 	setTodos: function(todos) {
@@ -33,9 +35,17 @@ module.exports = {
 		// filter by searchFilter
 		filterTodos = filterTodos.filter(function(val) {
 			return val.text.toLowerCase().includes(searchFilter.toLowerCase())
-		})		
+		})
+
+		var rankings = {
+			true: 0,
+			false: 1
+		}		
 
 		// sort todos - incomplete up on list
+		filterTodos.sort(function(a,b) {
+			return rankings[b.completed] - rankings[a.completed]
+		})
 
 
 		return filterTodos
