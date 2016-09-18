@@ -39,7 +39,7 @@ var TodoApp = React.createClass({
 	    			text: item,
 	    			completed: false,
 	    			createdAt: moment().unix(),
-	    			completedAt: null
+	    			completedAt: undefined
 	    		}
     		]
     	})
@@ -47,12 +47,13 @@ var TodoApp = React.createClass({
 
     // The ID is passed 2 comonents earlier
     handleToggle(id) {
-
+    	// What if we uncheck it...do we uncomplete it?
     	var updatedTodos = this.state.todos.map(function(todo) {
     		// Updated where the todo id matches
     		if (todo.id === id) {
     			todo.completed = !todo.completed;
-    			todo.completedAt = moment().unix();
+    			// Below is very nifty, allows for updating checked to-dos to not done
+    			todo.completedAt = todo.completed ? moment().unix() : undefined;
     			console.log('updated');
     		}
     		return todo
@@ -74,12 +75,14 @@ var TodoApp = React.createClass({
     	var filteredTodos = TodoAPI.filterTodos(todos, completed, searchFilter, sorted)
 
         return (
-        	<div className="medium-4 large-6 columns small-centered">
              <div className="row">
-             <h1>Todo App.jsx</h1>
+             <div className="small-11 medium-6 large-6 columns small-centered">
+             <h1 className="page-title">Todo App.jsx</h1>
+             <div className="container">
              	<Search sendFilter={this.handleSearch} doSort={this.sortTodos}/>
             	<TodoList todos={filteredTodos} onToggle={this.handleToggle} />
             	<AddTodo addTodo={this.handleAddTodo} />
+            </div>
              </div>
             </div>
         );

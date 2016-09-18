@@ -16,23 +16,35 @@ var Todo = React.createClass({
 
     render() {
     	var {text, id, completed, createdAt, completedAt} = this.props;
+        var todoClassname = completed ? 'todo todo-completed' : 'todo';
         var formatDate = (unixStamp) => {
             var currentMoment = moment.unix(unixStamp)
             return currentMoment.format("MMM, D, Y @ hh:ma");
         }
         var created_at = formatDate(createdAt)
 
+        // Set a message variable and deal with it
         var renderTimeStamp = function() {
-            return completedAt > 0 ? formatDate(completedAt) : formatDate(createdAt);
+            if (completedAt > 0) {
+                var message = "Completed: " + formatDate(completedAt)
+            } else {
+                var message = "Created: " + formatDate(createdAt)
+            }
+            return message;
         }
 
 
         return (
 
+        <div className={todoClassname}>
         <div>
          <input type="checkbox" onChange={this.handleChange} 
                             defaultChecked={completed} />	
-          {text} | {renderTimeStamp()}
+        </div>
+        <div>
+          <p>{text}</p>
+          <p className="todo_subtext">{renderTimeStamp()}</p>
+        </div>
         </div>
         );
     }

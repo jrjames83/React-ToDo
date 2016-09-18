@@ -20,7 +20,7 @@ var AddTodo = React.createClass({
     },
     render() {
         return (
-            <div>
+            <div className="container_footer">
             	<input type="text" ref="query" placeholder="add to do" />
             	<button className="button expanded" onClick={this.handleSubmit}>Add</button>
             </div>

@@ -20,13 +20,19 @@ describe('TodoApp', () => {
 		toDoApp.handleAddTodo(toDoText);
 		expect(toDoApp.state.todos.length).toBe(1)
 		expect(toDoApp.state.todos[0].text).toBe(toDoText)
+		expect(toDoApp.state.todos[0].createdAt).toBeA('number')
+
+		// expect that the created at should be a number
+
 	})
 
 	it('should toggle completed value when handleToggle called', () => {
 		var todoData = {
 			id: 11,
 			text: "test features", 
-			completed: false
+			completed: false,
+			createdAt: 0,
+			completedAt: undefined
 		};
 
 		var todoApp = TestUtils.renderIntoDocument(<TodoApp />);
@@ -41,8 +47,32 @@ describe('TodoApp', () => {
 
 		// Check that completed value changed from false to true
 		expect(todoApp.state.todos[0].completed).toBe(true)
+		expect(todoApp.state.todos[0].completedAt).toBeA('number')
 
-
+		// When we completed the task, expected completedAt to be a number
 
 	})
+
+	// Test what happens when you move a todo from completd to uncompleted, the date should be undfined
+	// new test here
+
+	it('moving a todo frmo complete to uncomplete should undefine the completedAt', () => {
+		var todoData = {
+			id: 11,
+			text: "test features", 
+			completed: false,
+			createdAt: 0,
+			completedAt: undefined
+		};
+
+		var todoApp = TestUtils.renderIntoDocument(<TodoApp />);
+		todoApp.setState({todos: []});
+		todoApp.setState({todos: [todoData]});
+		todoApp.handleToggle(11) // completed True
+		expect(todoApp.state.todos[0].completedAt).toBeA('number')
+		todoApp.handleToggle(11) // completed false
+		expect(todoApp.state.todos[0].completedAt).toBe(undefined)
+
+	})
+
 })

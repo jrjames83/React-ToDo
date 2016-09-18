@@ -15,7 +15,7 @@ var Search = React.createClass({
     },
     render() {
         return (
-            <div>
+            <div className="container_header">
                 <p>Sort by created at</p>
                  <div>
                     <label>
