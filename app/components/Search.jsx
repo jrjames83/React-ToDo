@@ -9,19 +9,32 @@ var Search = React.createClass({
     	console.log(event.target.value);
     	this.props.sendFilter(showCompleted, searchText);
     },
+    handleSort(e) {
+        console.log(this.refs.sort.checked)
+        this.props.doSort(this.refs.sort.checked) // why did I need an arbitrary param here?
+    },
     render() {
         return (
             <div>
-            <div>
-              <input type="text" id="q" ref="query" placeholder="filter" 
-              				onChange={this.handleChange} />
-            </div>
-            <div>
-            	<label>
-            	<input type="checkbox" ref="showCompleted" onChange={this.handleChange} />
-            	Show completed
-            	</label>
-            </div>
+                <p>Sort by created at</p>
+                 <div>
+                    <label>
+                    <input type="checkbox" ref="sort" onChange={this.handleSort} />
+                    Sort earliest to newest?
+                    </label>
+                </div>
+
+                <div>
+                  <input type="text" id="q" ref="query" placeholder="filter" onChange={this.handleChange} />
+                </div>
+                
+                <div>
+                	<label>
+                	<input type="checkbox" ref="showCompleted" onChange={this.handleChange} />
+                	Show completed
+                	</label>
+                </div>
+
 
             </div>
         );

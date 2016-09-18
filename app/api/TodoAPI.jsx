@@ -24,7 +24,7 @@ module.exports = {
 
 	},
 
-	filterTodos: function(todos, showCompleted, searchFilter) {
+	filterTodos: function(todos, showCompleted, searchFilter, sorted) {
 		var filterTodos = todos;
 
 		// filter by showCompleted
@@ -42,12 +42,21 @@ module.exports = {
 			false: 1
 		}		
 
-		// sort todos - incomplete up on list
+		// sort todos by putting imcomplete on list
 		filterTodos.sort(function(a,b) {
 			return rankings[b.completed] - rankings[a.completed]
 		})
 
+		// handle sorted by created at, using the sorted arg, which will be true if desired 
 
+		if (sorted) {
+			console.log("attempting to sort at least from the last function")
+			filterTodos.sort(function(a,b) {
+				return b.createdAt - a.createdAt
+			})
+		}
+
+		//Final Return
 		return filterTodos
 	}
 };

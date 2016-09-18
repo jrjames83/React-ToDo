@@ -12,7 +12,8 @@ var TodoApp = React.createClass({
 	    return {
 	        todos: TodoAPI.getTodos(),
 	        searchFilter: '',
-	        completed: false  
+	        completed: false,
+	        sorted: false  
 	    };	
 	},
 
@@ -61,29 +62,22 @@ var TodoApp = React.createClass({
 
     },
 
+    sortTodos(value) {
+    	console.log("Gonna sort from the main app!")
+    	// Now need a method on the API that just sorts the todos
+    	this.setState({sorted: value});
+
+    },
+
     render() {
-    	var {todos, searchFilter, completed} = this.state;
-    	var filteredTodos = TodoAPI.filterTodos(todos, completed, searchFilter)
+    	var {todos, searchFilter, completed, sorted} = this.state;
+    	var filteredTodos = TodoAPI.filterTodos(todos, completed, searchFilter, sorted)
 
-    	// Now factored into the TodoAPI file
-    	// var filterRender = () => {
-    	// 	if(searchFilter.length > 0) {
-    	// 		return this.state.todos.filter(function(val) {
-    	// 			return val.text.toLowerCase().includes(searchFilter)
-    	// 		})
-    	// 	} else {
-    	// 		return todos
-    	// 	}
-    	// }
-
-
-    	// Conditionally render based on searchFilter here
-    	// Elements from the state controlled here are passed down as props
         return (
         	<div className="medium-4 large-6 columns small-centered">
              <div className="row">
              <h1>Todo App.jsx</h1>
-             	<Search sendFilter={this.handleSearch}/>
+             	<Search sendFilter={this.handleSearch} doSort={this.sortTodos}/>
             	<TodoList todos={filteredTodos} onToggle={this.handleToggle} />
             	<AddTodo addTodo={this.handleAddTodo} />
              </div>
