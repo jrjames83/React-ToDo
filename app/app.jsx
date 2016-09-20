@@ -3,6 +3,17 @@ var ReactDOM = require('react-dom');
 var TodoApp = require('TodoApp');
 var {Route, Router, IndexRoute, hashHistory} = require('react-router');
 
+var actions = require('actions');
+var store = require('configureStore').configure(); // returns store
+
+store.subscribe(() => {
+	console.log('New State: ', store.getState());
+})
+
+
+store.dispatch(actions.addTodo('Fix my redux store'))
+store.dispatch(actions.setSearchText('My redux search text'))
+store.dispatch(actions.toggleShowCompleted())
 
 
 
