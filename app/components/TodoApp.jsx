@@ -1,7 +1,12 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
-var TodoList = require('TodoList');
-var AddTodo = require('addTodo');
+//import TodoList from 'TodoList'
+//var TodoList = require('TodoList');
+//var AddTodo = require('addTodo'); 
+var AddTodo = require('AddTodo').default;
+var TodoList = require('TodoList').default;
+
+
 var Search = require('Search');
 var uuid = require('node-uuid');
 var TodoAPI = require('TodoAPI');
@@ -45,24 +50,6 @@ var TodoApp = React.createClass({
     	})
     },
 
-    // The ID is passed 2 comonents earlier
-    handleToggle(id) {
-    	// What if we uncheck it...do we uncomplete it?
-    	var updatedTodos = this.state.todos.map(function(todo) {
-    		// Updated where the todo id matches
-    		if (todo.id === id) {
-    			todo.completed = !todo.completed;
-    			// Below is very nifty, allows for updating checked to-dos to not done
-    			todo.completedAt = todo.completed ? moment().unix() : undefined;
-    			console.log('updated');
-    		}
-    		return todo
-    	})
-
-    	this.setState({todos: updatedTodos});
-
-    },
-
     sortTodos(value) {
     	console.log("Gonna sort from the main app!")
     	// Now need a method on the API that just sorts the todos
@@ -80,7 +67,7 @@ var TodoApp = React.createClass({
               <h1 className="page-title">Todo App.jsx</h1>
                <div className="container">
              	<Search sendFilter={this.handleSearch} doSort={this.sortTodos}/>
-            	<TodoList todos={filteredTodos} onToggle={this.handleToggle} />
+            	<TodoList/>
             	<AddTodo addTodo={this.handleAddTodo} />
               </div>
              </div>

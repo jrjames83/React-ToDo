@@ -1,7 +1,13 @@
 var React = require('react');
-var Todo = require('Todo');
+// var Todo = require('Todo');
+import Todo from 'Todo'; // we want the connected version in our components
+var {connect} = require('react-redux');
 
-var TodoList = React.createClass({
+
+// We now have access to the store so we don't need
+// to pass functions through props
+
+export var TodoList = React.createClass({
     displayName: 'TodoList',
 
     render() {
@@ -14,7 +20,7 @@ var TodoList = React.createClass({
             }
     		return todos.map((todo) => {
     			return (
-    				<Todo key={todo.id} {...todo} onToggle={this.props.onToggle} />
+    				<Todo key={todo.id} {...todo}  />
     				)
     		});
     	};
@@ -26,4 +32,14 @@ var TodoList = React.createClass({
     }
 });
 
-module.exports = TodoList;
+export default connect(
+
+    (state) => {
+        return {
+            todos: state.todos
+        }
+    }
+
+)(TodoList); // can now request data it wants
+// Above, the todos object on state gets set as it
+// it were a prop

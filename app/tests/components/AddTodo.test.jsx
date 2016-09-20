@@ -4,7 +4,7 @@ var expect = require('expect');
 var $ = require('jQuery');
 var TestUtils = require('react-addons-test-utils');
 
-var AddTodo = require('AddTodo');
+var {AddTodo} = require('AddTodo'); // The non connected Component
 
 describe('AddTodo', () => {
 	it('should exist', () => {
@@ -13,22 +13,30 @@ describe('AddTodo', () => {
 
 	// Test that if I call a function, it was called with an arg
 
-	it('addTodo should get called with an arg when button is clicked', () => {
+	it('dispatch ADD_TODO when valid todo text', () => {
+		var todoText = 'Check email';
+
 		var spy = expect.createSpy();
-		var addTodo = TestUtils.renderIntoDocument(<AddTodo addTodo={spy} />);
+		
+		var action = {
+			type: 'ADD_TODO',
+			text: todoText
+		}
+
+		var addTodo = TestUtils.renderIntoDocument(<AddTodo dispatch={spy} />);
 		var $el = $(ReactDOM.findDOMNode(addTodo));
 
 		expect($el).toExist();
 
-		addTodo.refs.query.value = 'my todo';
+		addTodo.refs.query.value = todoText;
 		TestUtils.Simulate.click($el.find('button')[0]);
 
-		expect(spy).toHaveBeenCalledWith('my todo');
+		expect(spy).toHaveBeenCalledWith(action);
 	})
 
-	it('addTodo should NOT get called if invalid data entered', () => {
+	it('should not dispatch ADD_TODO when invalid todo Text', () => {
 		var spy = expect.createSpy();
-		var addTodo = TestUtils.renderIntoDocument(<AddTodo addTodo={spy} />);
+		var addTodo = TestUtils.renderIntoDocument(<AddTodo dispatch={spy} />);
 		var $el = $(ReactDOM.findDOMNode(addTodo));
 		expect($el).toExist();
 		addTodo.refs.query.value = '';

@@ -1,5 +1,6 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
+var {Provider} = require('react-redux');
 var TodoApp = require('TodoApp');
 var {Route, Router, IndexRoute, hashHistory} = require('react-router');
 
@@ -42,6 +43,8 @@ http://api.openweathermap.org/data/2.5/weather
 // );
 
 ReactDOM.render(
-	<TodoApp />,
+	<Provider store={store}>
+		<TodoApp />
+	</Provider>,
 	document.getElementById('app')
 	)
