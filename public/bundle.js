@@ -113,10 +113,16 @@
 
 	var actions = __webpack_require__(289);
 	var store = __webpack_require__(377).configure(); // returns store
+	var TodoAPI = __webpack_require__(315);
 
 	store.subscribe(function () {
-		console.log('New State: ', store.getState());
+		var state = store.getState();
+		console.log('State: ', state);
+		TodoAPI.setTodos(state.todos);
 	});
+
+	var initialTodos = TodoAPI.getTodos();
+	store.dispatch(actions.addTodos(initialTodos));
 
 	//store.dispatch(actions.addTodo('Fix my redux store'))
 	//store.dispatch(actions.setSearchText(''))
@@ -21229,66 +21235,27 @@
 
 	'use strict';
 
-	function _toConsumableArray(arr) { if (Array.isArray(arr)) { for (var i = 0, arr2 = Array(arr.length); i < arr.length; i++) { arr2[i] = arr[i]; } return arr2; } else { return Array.from(arr); } }
-
 	var React = __webpack_require__(8);
 	var ReactDOM = __webpack_require__(165);
 	//import TodoList from 'TodoList'
 	//var TodoList = require('TodoList');
-	//var AddTodo = require('addTodo'); 
+	//var AddTodo = require('addTodo');
+
+	var TodoAPI = __webpack_require__(315);
+
 	var AddTodo = __webpack_require__(385).default;
 	var TodoList = __webpack_require__(187).default;
 	var Search = __webpack_require__(291).default;
 
 	var uuid = __webpack_require__(292);
-	var TodoAPI = __webpack_require__(315);
+	//
 	var moment = __webpack_require__(189);
 
 	var TodoApp = React.createClass({
 	  displayName: 'TodoApp',
-	  getInitialState: function getInitialState() {
-	    return {
-	      todos: TodoAPI.getTodos(),
-	      searchFilter: '',
-	      completed: false,
-	      sorted: false
-	    };
-	  },
-	  handleSearch: function handleSearch(completed, value) {
-	    this.setState({
-	      searchFilter: value.toLowerCase(),
-	      completed: completed
-	    });
-	  },
-	  componentDidUpdate: function componentDidUpdate(prevProps, prevState) {
-	    TodoAPI.setTodos(this.state.todos);
-	    //console.log("i updated")
-	  },
-	  handleAddTodo: function handleAddTodo(item) {
-
-	    this.setState({
-	      todos: [].concat(_toConsumableArray(this.state.todos), [{
-	        id: uuid(),
-	        text: item,
-	        completed: false,
-	        createdAt: moment().unix(),
-	        completedAt: undefined
-	      }])
-	    });
-	  },
-	  sortTodos: function sortTodos(value) {
-	    console.log("Gonna sort from the main app!");
-	    // Now need a method on the API that just sorts the todos
-	    this.setState({ sorted: value });
-	  },
 	  render: function render() {
-	    var _state = this.state;
-	    var todos = _state.todos;
-	    var searchFilter = _state.searchFilter;
-	    var completed = _state.completed;
-	    var sorted = _state.sorted;
-
-	    var filteredTodos = TodoAPI.filterTodos(todos, completed, searchFilter, sorted);
+	    // var {todos, searchFilter, completed, sorted} = this.state;
+	    //var filteredTodos = TodoAPI.filterTodos(todos, completed, searchFilter, sorted)
 
 	    return React.createElement(
 	      'div',
@@ -21304,9 +21271,9 @@
 	        React.createElement(
 	          'div',
 	          { className: 'container' },
-	          React.createElement(Search, { sendFilter: this.handleSearch, doSort: this.sortTodos }),
+	          React.createElement(Search, null),
 	          React.createElement(TodoList, null),
-	          React.createElement(AddTodo, { addTodo: this.handleAddTodo })
+	          React.createElement(AddTodo, null)
 	        )
 	      )
 	    );
@@ -34597,6 +34564,13 @@
 		};
 	};
 
+	var addTodos = exports.addTodos = function addTodos(todos) {
+		return {
+			type: 'ADD_TODOS',
+			todos: todos
+		};
+	};
+
 	// toggleShowCompleted (just needs a type TOGGLE_SHOW_COMPLETED)
 	var toggleShowCompleted = exports.toggleShowCompleted = function toggleShowCompleted() {
 		return {
@@ -34604,7 +34578,7 @@
 		};
 	};
 
-	var sort = exports.sort = function sort() {
+	var sortTodos = exports.sortTodos = function sortTodos() {
 		return {
 			type: 'SORT_TODOS'
 		};
@@ -34646,6 +34620,7 @@
 	        var dispatch = _props.dispatch;
 	        var showCompleted = _props.showCompleted;
 	        var searchText = _props.searchText;
+	        var sort = _props.sort;
 
 
 	        return React.createElement(
@@ -34662,7 +34637,9 @@
 	                React.createElement(
 	                    'label',
 	                    null,
-	                    React.createElement('input', { type: 'checkbox', ref: 'sort' }),
+	                    React.createElement('input', { type: 'checkbox', ref: 'sort', onChange: function onChange() {
+	                            dispatch(actions.sortTodos());
+	                        } }),
 	                    'Sort earliest to newest?'
 	                )
 	            ),
@@ -44714,6 +44691,9 @@
 						return todo;
 					}
 				}); // end toggle
+
+			case 'ADD_TODOS':
+				return [].concat(_toConsumableArray(state), _toConsumableArray(action.todos));
 
 			default:
 				return state;

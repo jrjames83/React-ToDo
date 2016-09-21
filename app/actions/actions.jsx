@@ -13,6 +13,13 @@ export var addTodo = (text) => {
 	}
 }
 
+export var addTodos = (todos) => {
+	return {
+		type: 'ADD_TODOS', 
+		todos: todos
+	}
+}
+
 // toggleShowCompleted (just needs a type TOGGLE_SHOW_COMPLETED)
 export var toggleShowCompleted = () => {
 	return {
@@ -20,7 +27,7 @@ export var toggleShowCompleted = () => {
 	}
 }
 
-export var sort = () => {
+export var sortTodos = () => {
 	return {
 		type: 'SORT_TODOS'
 	}

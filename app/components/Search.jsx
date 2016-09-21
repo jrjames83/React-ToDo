@@ -8,14 +8,15 @@ export var Search = React.createClass({
     displayName: 'Search',
 
     render() {
-        var {dispatch, showCompleted, searchText} = this.props;
+        var {dispatch, showCompleted, searchText, sort} = this.props;
 
         return (
             <div className="container_header">
                 <p>Sort by created at</p>
                  <div>
                     <label>
-                    <input type="checkbox" ref="sort" />
+                    <input type="checkbox" ref="sort" onChange={() => {
+                            dispatch(actions.sortTodos()) }}/>
                     Sort earliest to newest?
                     </label>
                 </div>

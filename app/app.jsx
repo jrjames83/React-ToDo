@@ -6,11 +6,17 @@ var {Route, Router, IndexRoute, hashHistory} = require('react-router');
 
 var actions = require('actions');
 var store = require('configureStore').configure(); // returns store
+var TodoAPI = require('TodoAPI');
+
 
 store.subscribe(() => {
-	console.log('New State: ', store.getState());
-})
+	var state = store.getState();
+	console.log('State: ', state)
+	TodoAPI.setTodos(state.todos);}
+)
 
+var initialTodos = TodoAPI.getTodos();
+store.dispatch(actions.addTodos(initialTodos));
 
 //store.dispatch(actions.addTodo('Fix my redux store'))
 //store.dispatch(actions.setSearchText(''))
