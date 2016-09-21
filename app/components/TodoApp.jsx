@@ -5,9 +5,8 @@ var ReactDOM = require('react-dom');
 //var AddTodo = require('addTodo'); 
 var AddTodo = require('AddTodo').default;
 var TodoList = require('TodoList').default;
+var Search = require('Search').default;
 
-
-var Search = require('Search');
 var uuid = require('node-uuid');
 var TodoAPI = require('TodoAPI');
 var moment = require('moment');

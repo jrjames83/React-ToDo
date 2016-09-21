@@ -118,9 +118,10 @@
 		console.log('New State: ', store.getState());
 	});
 
-	store.dispatch(actions.addTodo('Fix my redux store'));
-	store.dispatch(actions.setSearchText('My redux search text'));
-	store.dispatch(actions.toggleShowCompleted());
+	//store.dispatch(actions.addTodo('Fix my redux store'))
+	//store.dispatch(actions.setSearchText(''))
+	//store.dispatch(actions.toggleShowCompleted())
+
 
 	// Load foundation
 	__webpack_require__(379);
@@ -21237,8 +21238,8 @@
 	//var AddTodo = require('addTodo'); 
 	var AddTodo = __webpack_require__(385).default;
 	var TodoList = __webpack_require__(187).default;
+	var Search = __webpack_require__(291).default;
 
-	var Search = __webpack_require__(291);
 	var uuid = __webpack_require__(292);
 	var TodoAPI = __webpack_require__(315);
 	var moment = __webpack_require__(189);
@@ -21341,6 +21342,8 @@
 
 	var connect = _require.connect;
 
+	var TodoAPI = __webpack_require__(315);
+
 	// We now have access to the store so we don't need
 	// to pass functions through props
 
@@ -21348,7 +21351,11 @@
 	    displayName: 'TodoList',
 
 	    render: function render() {
-	        var todos = this.props.todos;
+	        var _props = this.props;
+	        var todos = _props.todos;
+	        var showCompleted = _props.showCompleted;
+	        var searchText = _props.searchText;
+	        var sort = _props.sort;
 
 	        // This.props.ontoggle is passed up to the parent
 
@@ -21359,11 +21366,13 @@
 	                    { className: 'container_message' },
 	                    'Nothing To Do'
 	                );
+	            } else {
+	                return TodoAPI.filterTodos(todos, showCompleted, searchText, sort).map(function (todo) {
+	                    return React.createElement(_Todo2.default, _extends({ key: todo.id }, todo));
+	                });
 	            }
-	            return todos.map(function (todo) {
-	                return React.createElement(_Todo2.default, _extends({ key: todo.id }, todo));
-	            });
 	        };
+
 	        return React.createElement(
 	            'div',
 	            null,
@@ -21373,9 +21382,7 @@
 	});
 
 	exports.default = connect(function (state) {
-	    return {
-	        todos: state.todos
-	    };
+	    return state; // get all items on state tree
 	})(TodoList); // can now request data it wants
 	// Above, the todos object on state gets set as it
 	// it were a prop
@@ -34597,6 +34604,12 @@
 		};
 	};
 
+	var sort = exports.sort = function sort() {
+		return {
+			type: 'SORT_TODOS'
+		};
+	};
+
 	// toggleTodo(id) TOGGLE_TODO
 	var toggleTodo = exports.toggleTodo = function toggleTodo(id) {
 		return {
@@ -34612,22 +34625,29 @@
 
 	'use strict';
 
+	Object.defineProperty(exports, "__esModule", {
+	    value: true
+	});
 	var React = __webpack_require__(8);
 
-	var Search = React.createClass({
+	var _require = __webpack_require__(166);
+
+	var connect = _require.connect;
+
+	var actions = __webpack_require__(289);
+
+	var Search = exports.Search = React.createClass({
 	    displayName: 'Search',
 
-	    handleChange: function handleChange(event) {
-	        var showCompleted = this.refs.showCompleted.checked;
-	        var searchText = this.refs.query.value;
-	        console.log(event.target.value);
-	        this.props.sendFilter(showCompleted, searchText);
-	    },
-	    handleSort: function handleSort(e) {
-	        console.log(this.refs.sort.checked);
-	        this.props.doSort(this.refs.sort.checked); // why did I need an arbitrary param here?
-	    },
 	    render: function render() {
+	        var _this = this;
+
+	        var _props = this.props;
+	        var dispatch = _props.dispatch;
+	        var showCompleted = _props.showCompleted;
+	        var searchText = _props.searchText;
+
+
 	        return React.createElement(
 	            'div',
 	            { className: 'container_header' },
@@ -34642,14 +34662,17 @@
 	                React.createElement(
 	                    'label',
 	                    null,
-	                    React.createElement('input', { type: 'checkbox', ref: 'sort', onChange: this.handleSort }),
+	                    React.createElement('input', { type: 'checkbox', ref: 'sort' }),
 	                    'Sort earliest to newest?'
 	                )
 	            ),
 	            React.createElement(
 	                'div',
 	                null,
-	                React.createElement('input', { type: 'text', id: 'q', ref: 'query', placeholder: 'filter', onChange: this.handleChange })
+	                React.createElement('input', { type: 'search', id: 'q', ref: 'searchText',
+	                    value: searchText, placeholder: 'filter', onChange: function onChange() {
+	                        dispatch(actions.setSearchText(_this.refs.searchText.value));
+	                    } })
 	            ),
 	            React.createElement(
 	                'div',
@@ -34657,7 +34680,9 @@
 	                React.createElement(
 	                    'label',
 	                    null,
-	                    React.createElement('input', { type: 'checkbox', ref: 'showCompleted', onChange: this.handleChange }),
+	                    React.createElement('input', { type: 'checkbox', ref: 'showCompleted', checked: showCompleted, onChange: function onChange() {
+	                            dispatch(actions.toggleShowCompleted());
+	                        } }),
 	                    'Show completed'
 	                )
 	            )
@@ -34665,7 +34690,17 @@
 	    }
 	});
 
-	module.exports = Search;
+	exports.default = connect(
+
+	// Provides access to these on props
+	function (state) {
+	    return {
+	        showCompleted: state.showCompleted,
+	        searchText: state.searchText
+	    };
+	})(Search);
+	// Need to change the thingy here
+	// Do
 
 /***/ },
 /* 292 */
@@ -44570,13 +44605,15 @@
 	var searchTextReducer = _require.searchTextReducer;
 	var showCompletedReducer = _require.showCompletedReducer;
 	var todosReducer = _require.todosReducer;
+	var sortTodoReducer = _require.sortTodoReducer;
 	var configure = exports.configure = function configure() {
 		var initialState = arguments.length <= 0 || arguments[0] === undefined ? {} : arguments[0];
 
 		var reducer = redux.combineReducers({
 			searchText: searchTextReducer,
 			showCompleted: showCompletedReducer,
-			todos: todosReducer
+			todos: todosReducer,
+			sort: sortTodoReducer
 		});
 
 		var store = redux.createStore(reducer, initialState, redux.compose(window.devToolsExtension ? window.devToolsExtension() : function (f) {
@@ -44624,6 +44661,19 @@
 
 		switch (action.type) {
 			case 'TOGGLE_SHOW_COMPLETED':
+				return !state;
+			default:
+				return state;
+		}
+	};
+
+	// This will be for sorting all todos, default state is false
+	var sortTodoReducer = exports.sortTodoReducer = function sortTodoReducer() {
+		var state = arguments.length <= 0 || arguments[0] === undefined ? false : arguments[0];
+		var action = arguments[1];
+
+		switch (action.type) {
+			case 'SORT_TODOS':
 				return !state;
 			default:
 				return state;

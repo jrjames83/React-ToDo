@@ -25,6 +25,16 @@ export var showCompletedReducer = (state = false, action) => {
 }
 
 
+// This will be for sorting all todos, default state is false
+export var sortTodoReducer = (state = false, action) => {
+	switch(action.type) {
+		case 'SORT_TODOS':
+			return !state;
+		default:
+			return state;
+	}
+}
+
 // This deals with adding and completing individual todos
 export var todosReducer = (state = [], action) => {
 	switch(action.type) {

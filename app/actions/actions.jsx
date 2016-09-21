@@ -20,6 +20,12 @@ export var toggleShowCompleted = () => {
 	}
 }
 
+export var sort = () => {
+	return {
+		type: 'SORT_TODOS'
+	}
+}
+
 
 // toggleTodo(id) TOGGLE_TODO
 export var toggleTodo = (id) => {

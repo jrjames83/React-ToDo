@@ -12,9 +12,9 @@ store.subscribe(() => {
 })
 
 
-store.dispatch(actions.addTodo('Fix my redux store'))
-store.dispatch(actions.setSearchText('My redux search text'))
-store.dispatch(actions.toggleShowCompleted())
+//store.dispatch(actions.addTodo('Fix my redux store'))
+//store.dispatch(actions.setSearchText(''))
+//store.dispatch(actions.toggleShowCompleted())
 
 
 

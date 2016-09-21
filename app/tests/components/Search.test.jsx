@@ -4,7 +4,8 @@ var expect = require('expect');
 var $ = require('jQuery');
 var TestUtils = require('react-addons-test-utils');
 
-var Search = require('Search');
+//var Search = require('Search');
+import {Search} from 'Search';
 
 // When I change the search field, my application state should change
 // Possibly the length of the to-do's should change
@@ -26,27 +27,34 @@ describe('Search', () => {
 		expect(Search).toExist();
 	})
 
-	it('When i enter text in the search, sendFilter should be called', () =>{
+	it('should dispatch SET_SEARCH_TEXT on input change', () =>{
 		var spy = expect.createSpy();
-		// Below we're passing in the component just as we would in the Parent
-		var searchForm = TestUtils.renderIntoDocument(<Search sendFilter={spy} />);
+		var searchText = 'dog'
+		var action = {
+			type: 'SET_SEARCH_TEXT',
+			searchText: searchText
+		}
+		var searchForm = TestUtils.renderIntoDocument(<Search dispatch={spy} />);
 		var $el = $(ReactDOM.findDOMNode(searchForm));
 		expect($el).toExist();
-		searchForm.refs.query.value = 'abc';
-		TestUtils.Simulate.change(searchForm.refs.query);
-		expect(spy).toHaveBeenCalledWith(false, 'abc');
+		searchForm.refs.searchText.value = 'dog';
+		TestUtils.Simulate.change(searchForm.refs.searchText);
+		expect(spy).toHaveBeenCalledWith(action);
 	})
 
-	it('When I enter no text, but check the checkbox to show completed', () =>{
+	it('it should dispatch TOGGLE_SHOW_COMPLETED when checkbox checked', () =>{
 		var spy = expect.createSpy();
+		var action = {
+			type: 'TOGGLE_SHOW_COMPLETED'
+		}
 		// Below we're passing in the component just as we would in the Parent
-		var searchForm = TestUtils.renderIntoDocument(<Search sendFilter={spy} />);
+		var searchForm = TestUtils.renderIntoDocument(<Search dispatch={spy} />);
 		var $el = $(ReactDOM.findDOMNode(searchForm));
 		expect($el).toExist();
-		searchForm.refs.query.value = '';
+		searchForm.refs.searchText.value = '';
 		searchForm.refs.showCompleted.checked = true;
-		TestUtils.Simulate.change(searchForm.refs.query);
-		expect(spy).toHaveBeenCalledWith(true, '');
+		TestUtils.Simulate.change(searchForm.refs.showCompleted);
+		expect(spy).toHaveBeenCalledWith(action);
 	})
 
 

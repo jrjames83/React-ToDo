@@ -1,36 +1,36 @@
 var React = require('react');
+var {connect} = require('react-redux');
+var actions = require('actions');
 
-var Search = React.createClass({
+
+
+export var Search = React.createClass({
     displayName: 'Search',
 
-    handleChange(event) {
-    	var showCompleted = this.refs.showCompleted.checked;
-    	var searchText = this.refs.query.value;
-    	console.log(event.target.value);
-    	this.props.sendFilter(showCompleted, searchText);
-    },
-    handleSort(e) {
-        console.log(this.refs.sort.checked)
-        this.props.doSort(this.refs.sort.checked) // why did I need an arbitrary param here?
-    },
     render() {
+        var {dispatch, showCompleted, searchText} = this.props;
+
         return (
             <div className="container_header">
                 <p>Sort by created at</p>
                  <div>
                     <label>
-                    <input type="checkbox" ref="sort" onChange={this.handleSort} />
+                    <input type="checkbox" ref="sort" />
                     Sort earliest to newest?
                     </label>
                 </div>
 
                 <div>
-                  <input type="text" id="q" ref="query" placeholder="filter" onChange={this.handleChange} />
+                  <input type="search" id="q" ref="searchText" 
+                        value={searchText} placeholder="filter" onChange={() => {
+                            dispatch(actions.setSearchText(this.refs.searchText.value))
+                        }} />
                 </div>
                 
                 <div>
                 	<label>
-                	<input type="checkbox" ref="showCompleted" onChange={this.handleChange} />
+                	<input type="checkbox" ref="showCompleted" checked={showCompleted} onChange={() => {
+                            dispatch(actions.toggleShowCompleted()) }}/>
                 	Show completed
                 	</label>
                 </div>
@@ -41,4 +41,16 @@ var Search = React.createClass({
     }
 });
 
-module.exports = Search;
+export default connect(
+
+// Provides access to these on props
+    (state) => {
+        return {
+            showCompleted: state.showCompleted,
+            searchText: state.searchText
+        }
+    }
+
+)(Search);
+// Need to change the thingy here
+// Do
