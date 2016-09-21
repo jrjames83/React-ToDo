@@ -41,3 +41,13 @@ export var toggleTodo = (id) => {
 		id: id
 	}
 }
+
+
+// toggleTodo(id) TOGGLE_TODO
+export var editTodo = (id, text) => {
+	return {
+		type: 'EDIT_TODO',
+		id: id,
+		text: text
+	}
+}

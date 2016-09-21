@@ -71,6 +71,25 @@ export var todosReducer = (state = [], action) => {
     		}
     	}) // end toggle
 
+
+		case 'EDIT_TODO':
+					return state.map(function(todo) {
+						// action.id is coming off the action
+		    		if (todo.id === action.id) {
+		    			var updatedText = action.text
+
+		    			return {
+		    				...todo,
+		    				// Below we override
+		    				text: updatedText
+		    				
+		    			}
+		    		} else {
+		    			return todo;
+		    		}
+		    	}) // end toggle
+
+
 			case 'ADD_TODOS':
 				return [
 					...state,
