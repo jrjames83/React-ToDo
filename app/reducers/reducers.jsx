@@ -42,13 +42,7 @@ export var todosReducer = (state = [], action) => {
 		case 'ADD_TODO':
 			return [
 				...state,
-				{
-					id: uuid(),
-					text: action.text,
-					completed: false,
-					createdAt: moment().unix(),
-					completedAt: undefined
-				}
+				action.todo
 			]
 		
 		// Toggling a specific todo's state

@@ -15,6 +15,8 @@ store.subscribe(() => {
 	TodoAPI.setTodos(state.todos);}
 )
 
+//import './../playground/fbindex.js';
+
 var initialTodos = TodoAPI.getTodos();
 store.dispatch(actions.addTodos(initialTodos));
 

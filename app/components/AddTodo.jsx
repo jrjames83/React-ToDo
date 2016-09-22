@@ -18,7 +18,9 @@ export var AddTodo = React.createClass({
     	var item = this.refs.query.value;
     	if (item.length > 0) {
     		//this.props.addTodo(item);
-            dispatch(actions.addTodo(item))
+            // This kicks off the firebase action
+            // The firebase action then calls the addTodo action
+            dispatch(actions.startAddTodo(item))
     		this.refs.query.value = "";
     	} else {
     		this.refs.query.focus();

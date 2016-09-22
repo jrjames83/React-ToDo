@@ -1,3 +1,7 @@
+import firebase, {firebaseRef} from 'app/firebase/index';
+import moment from 'moment';
+import uuid from 'node-uuid';
+
 
 export var setSearchText = (searchText) => {
 	return {
@@ -6,10 +10,10 @@ export var setSearchText = (searchText) => {
 	}
 }
 
-export var addTodo = (text) => {
+export var addTodo = (todo) => {
 	return {
 		type: 'ADD_TODO',
-		text: text
+		todo: todo
 	}
 }
 
@@ -19,6 +23,28 @@ export var addTodos = (todos) => {
 		todos: todos
 	}
 }
+
+export var startAddTodo = (text) => {
+	return (dispatch, getState) => {
+		var todo = {
+					id: uuid(),
+					text: text,
+					completed: false,
+					createdAt: moment().unix(),
+					completedAt: null
+				}
+		// Now in firebase		
+		var todoRef = firebaseRef.child('todos').push(todo);
+
+		return todoRef.then(function(value) {
+			dispatch(addTodo({
+				...todo, // this will hit the addTodo which accepts diff data now
+				id: todoRef.key
+			}))
+		})
+	}
+}
+
 
 // toggleShowCompleted (just needs a type TOGGLE_SHOW_COMPLETED)
 export var toggleShowCompleted = () => {
