@@ -50,6 +50,20 @@ export var startEditTodo = (id, text) => {
 	} 
 }
 
+export var startToggleTodo = (id, completed) => {
+	return (dispatch, getState) => {
+		var todoRef = firebaseRef.child(`/todos/${id}`);
+		var updates = {
+			completed: completed,
+			completedAt: completed ? moment().unix() : undefined
+		}
+
+		return todoRef.update(updates).then(function(val) {
+			//dispatch action to update redux
+			dispatch(updateTodo(id, updates))
+		})
+	}
+}
 
 export var startAddTodo = (text) => {
 	return (dispatch, getState) => {
@@ -95,10 +109,11 @@ export var sortTodos = () => {
 /*
 	Handle in firebase and pass down to state
 */
-export var toggleTodo = (id) => {
+export var updateTodo = (id, updates) => {
 	return {
-		type: 'TOGGLE_TODO',
-		id: id
+		type: 'UPDATE_TODO',
+		id,
+		updates: updates
 	}
 }
 

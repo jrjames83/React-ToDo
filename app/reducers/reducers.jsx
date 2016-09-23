@@ -46,23 +46,19 @@ export var todosReducer = (state = [], action) => {
 			]
 		
 		// Toggling a specific todo's state
-		case 'TOGGLE_TODO':
-
+		case 'UPDATE_TODO':
 			return state.map(function(todo) {
 				// action.id is coming off the action
     		if (todo.id === action.id) {
-    			var nextCompleted = !todo.completed;
-
+    			// var nextCompleted = !todo.completed;
     			return {
     				...todo,
-    				// Below we override
-    				completed: nextCompleted,
-    				completedAt: nextCompleted ? moment().unix() : undefined
+    				...action.updates // properties here override above
     			}
-    		} else {
-    			return todo;
-    		}
-    	}) // end toggle
+    	} else {
+    		return todo;
+    	}
+		});
 
 
 		case 'EDIT_TODO':
