@@ -24,6 +24,33 @@ export var addTodos = (todos) => {
 	}
 }
 
+
+// My Edit Todo Action will do the following-----------
+/*
+	a) take the updated text
+	b) get the current todoID
+	c) update the text field in firebase
+	d) call editTodo case which will update the redux store
+
+*/
+
+// Testing one specific to do - now just need to fix the id
+export var startEditTodo = (id, text) => {
+	return (dispatch, getState) => {
+		var todoRef = firebaseRef.child(`/todos/${id}`);
+		var updates = {
+			text: text
+		}
+		return todoRef.update(updates).then(function(value) {
+			console.log("Updated");
+			dispatch(editTodo(id, updates))
+		}, function(er) {
+			console.log(er);
+		})
+	} 
+}
+
+
 export var startAddTodo = (text) => {
 	return (dispatch, getState) => {
 		var todo = {
@@ -36,6 +63,9 @@ export var startAddTodo = (text) => {
 		// Now in firebase		
 		var todoRef = firebaseRef.child('todos').push(todo);
 
+		// we add the data to firebase here, but then still kickoff
+		// The traditional call to addTodo, overiding the key with the FB
+		// Provided key
 		return todoRef.then(function(value) {
 			dispatch(addTodo({
 				...todo, // this will hit the addTodo which accepts diff data now
@@ -60,7 +90,11 @@ export var sortTodos = () => {
 }
 
 
+
 // toggleTodo(id) TOGGLE_TODO
+/*
+	Handle in firebase and pass down to state
+*/
 export var toggleTodo = (id) => {
 	return {
 		type: 'TOGGLE_TODO',
@@ -70,10 +104,10 @@ export var toggleTodo = (id) => {
 
 
 // toggleTodo(id) TOGGLE_TODO
-export var editTodo = (id, text) => {
+export var editTodo = (id, updates) => {
 	return {
 		type: 'EDIT_TODO',
 		id: id,
-		text: text
+		updates: updates
 	}
 }

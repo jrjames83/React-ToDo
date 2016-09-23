@@ -55,7 +55,6 @@ export var todosReducer = (state = [], action) => {
 
     			return {
     				...todo,
-
     				// Below we override
     				completed: nextCompleted,
     				completedAt: nextCompleted ? moment().unix() : undefined
@@ -74,8 +73,8 @@ export var todosReducer = (state = [], action) => {
 
 		    			return {
 		    				...todo,
-		    				// Below we override
-		    				text: updatedText
+		    				// this is an object (updates)
+		    				...action.updates
 		    				
 		    			}
 		    		} else {

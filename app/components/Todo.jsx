@@ -20,14 +20,14 @@ export var Todo = React.createClass({
       })
     },
 
-    saveTodo(e,id) {
-      console.log("you are trying to save me", id)
-      this.setState({
-        editing: !this.state.editing  
-      })
-      this.props.dispatch(actions.editTodo(id, this.refs.ptext.value))
-      console.log(this.refs.ptext.value)
-    },
+    // saveTodo(e,id) {
+    //   console.log("you are trying to save me", id)
+    //   this.setState({
+    //     editing: !this.state.editing  
+    //   })
+    //   this.props.dispatch(actions.editTodo(id, this.refs.ptext.value))
+    //   console.log(this.refs.ptext.value)
+    // },
 
     render: function() {
     	var {text, id, completed, createdAt, completedAt, dispatch} = this.props;
@@ -59,7 +59,8 @@ export var Todo = React.createClass({
           if(this.state.editing) {
             return <button onClick={() => { 
               var newText = this.refs.ptext.value;
-              dispatch(actions.editTodo(id,newText))
+              //dispatch(actions.editTodo(id,newText)) // works
+              dispatch(actions.startEditTodo(id, newText)) // testing
               this.setState({editing: false}) 
             }} className="button tiny tiny_btn">Save Todo</button>
           } else if (this.props.completed) {

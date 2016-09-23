@@ -22,9 +22,12 @@ describe('Todo', () => {
 
 		var spy = expect.createSpy();
 		var todo = TestUtils.renderIntoDocument(<Todo {...todoData} dispatch={spy}/>);
+
+		// Changed the DOM here, need to get the checkbox
 		var $el = $(ReactDOM.findDOMNode(todo));
 		expect($el).toExist();
-		TestUtils.Simulate.click($el[0]);
+		TestUtils.Simulate.click($el.find(":checkbox")[0]);
+		expect(spy).toHaveBeenCalled()
 
 		expect(spy).toHaveBeenCalledWith({
 			type: 'TOGGLE_TODO',
