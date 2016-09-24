@@ -9,16 +9,20 @@ var store = require('configureStore').configure(); // returns store
 var TodoAPI = require('TodoAPI');
 
 
-store.subscribe(() => {
-	var state = store.getState();
-	console.log('State: ', state)
-	TodoAPI.setTodos(state.todos);}
-)
+// store.subscribe(() => {
+// 	var state = store.getState();
+// 	console.log('State: ', state)
+// 	TodoAPI.setTodos(state.todos);}
+// )
 
 //import './../playground/fbindex.js';
 
-var initialTodos = TodoAPI.getTodos();
-store.dispatch(actions.addTodos(initialTodos));
+// var initialTodos = TodoAPI.getTodos();
+// store.dispatch(actions.addTodos(initialTodos));
+
+store.dispatch(actions.startAddTodos()); // get data from firebase
+
+
 
 //store.dispatch(actions.addTodo('Fix my redux store'))
 //store.dispatch(actions.setSearchText(''))

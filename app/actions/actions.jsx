@@ -24,6 +24,28 @@ export var addTodos = (todos) => {
 	}
 }
 
+export var startAddTodos = () => {
+	return (dispatch, getState) => {
+		var todosRef = firebaseRef.child('todos');
+
+		return todosRef.once('value').then(function(snapshot) {
+			var todos = snapshot.val() || {};
+			var parsedTodos = []; // redux expects an array
+			//Converted todos to parsedTodos
+
+			Object.keys(todos).forEach(function(val) {
+				parsedTodos.push({
+					id: val,
+					...todos[val] // this is getting the otehr stuff for that key
+				})
+			})
+
+			dispatch(addTodos(parsedTodos));
+		})
+	}
+
+	// at the end dispatch addTodos with the todos
+}
 
 // My Edit Todo Action will do the following-----------
 /*

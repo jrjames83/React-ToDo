@@ -115,16 +115,19 @@
 	var store = __webpack_require__(380).configure(); // returns store
 	var TodoAPI = __webpack_require__(187);
 
-	store.subscribe(function () {
-		var state = store.getState();
-		console.log('State: ', state);
-		TodoAPI.setTodos(state.todos);
-	});
+	// store.subscribe(() => {
+	// 	var state = store.getState();
+	// 	console.log('State: ', state)
+	// 	TodoAPI.setTodos(state.todos);}
+	// )
 
 	//import './../playground/fbindex.js';
 
-	var initialTodos = TodoAPI.getTodos();
-	store.dispatch(actions.addTodos(initialTodos));
+	// var initialTodos = TodoAPI.getTodos();
+	// store.dispatch(actions.addTodos(initialTodos));
+
+	store.dispatch(actions.startAddTodos()); // get data from firebase
+
 
 	//store.dispatch(actions.addTodo('Fix my redux store'))
 	//store.dispatch(actions.setSearchText(''))
@@ -34533,7 +34536,7 @@
 	Object.defineProperty(exports, "__esModule", {
 		value: true
 	});
-	exports.editTodo = exports.updateTodo = exports.sortTodos = exports.toggleShowCompleted = exports.startAddTodo = exports.startToggleTodo = exports.startEditTodo = exports.addTodos = exports.addTodo = exports.setSearchText = undefined;
+	exports.editTodo = exports.updateTodo = exports.sortTodos = exports.toggleShowCompleted = exports.startAddTodo = exports.startToggleTodo = exports.startEditTodo = exports.startAddTodos = exports.addTodos = exports.addTodo = exports.setSearchText = undefined;
 
 	var _extends = Object.assign || function (target) { for (var i = 1; i < arguments.length; i++) { var source = arguments[i]; for (var key in source) { if (Object.prototype.hasOwnProperty.call(source, key)) { target[key] = source[key]; } } } return target; };
 
@@ -34570,6 +34573,28 @@
 			type: 'ADD_TODOS',
 			todos: todos
 		};
+	};
+
+	var startAddTodos = exports.startAddTodos = function startAddTodos() {
+		return function (dispatch, getState) {
+			var todosRef = _index.firebaseRef.child('todos');
+
+			return todosRef.once('value').then(function (snapshot) {
+				var todos = snapshot.val() || {};
+				var parsedTodos = []; // redux expects an array
+				//Converted todos to parsedTodos
+
+				Object.keys(todos).forEach(function (val) {
+					parsedTodos.push(_extends({
+						id: val
+					}, todos[val]));
+				});
+
+				dispatch(addTodos(parsedTodos));
+			});
+		};
+
+		// at the end dispatch addTodos with the todos
 	};
 
 	// My Edit Todo Action will do the following-----------
