@@ -48,11 +48,8 @@ describe('Reducers', () => {
 			expect(res[0]).toEqual(action.todo);
 		})
 
-		it('should toggle completed of a real todo', () => {
-			var action = {
-				type: 'TOGGLE_TODO', // doesnt take other args
-				id: 1
-			}
+		it('should update todo', () => {
+
 			var sampleTodo = [{
 							  id:1, 
 							  text: 'walk', 
@@ -61,9 +58,22 @@ describe('Reducers', () => {
 							  completedAt: undefined
 							}];
 
+			var updates = {
+				completed: false,
+				completedAt: null
+			}
+			var action = {
+				type: 'UPDATE_TODO', // doesnt take other args
+				id: sampleTodo[0].id,
+				updates: updates
+			}
+
+
+
 			var res = reducers.todosReducer(df(sampleTodo), df(action));
-			expect(res[0].completed).toBe(true);
-			expect(res[0].completedAt).toBeA('number');
+			expect(res[0].completed).toEqual(updates.completed);
+			expect(res[0].completedAt).toEqual(updates.completedAt);
+			expect(res[0].text).toEqual(sampleTodo[0].text)
 
 		})
 
