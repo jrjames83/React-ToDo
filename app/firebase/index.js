@@ -5,12 +5,13 @@ import firebase from 'firebase';
 try {
 
 	var config = {
-		apiKey: "AIzaSyBRdN5WbSyVmDUcvVEJvMo-sCkaSdxwgyc",
-		authDomain: "jeffjamestodoapp.firebaseapp.com",
-		databaseURL: "https://jeffjamestodoapp.firebaseio.com",
-		storageBucket: "jeffjamestodoapp.appspot.com",
-		messagingSenderId: "1093013088068"
+		apiKey: process.env.API_KEY,
+		authDomain: process.env.AUTH_DOMAIN,
+		databaseURL: process.env.DATABASE_URL,
+		storageBucket: process.env.STORAGE_BUCKET
 	};
+
+	console.log(config);
 
 	firebase.initializeApp(config);
 
@@ -19,15 +20,7 @@ try {
 } catch (e) {
 
 
-
-
 }
-
-
-
-
-
-
 
 
 // set wipes all the data at the current reference
