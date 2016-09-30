@@ -24,6 +24,7 @@ module.exports = {
 
 	},
 
+	// This does not interact with state, it just filters state
 	filterTodos: function(todos, showCompleted, searchFilter, sorted) {
 		var filterTodos = todos;
 

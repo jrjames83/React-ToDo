@@ -15,21 +15,27 @@ export var TodoList = React.createClass({
 
     	var {todos, showCompleted, searchText, sort} = this.props;
 
+        // The below is actually filtering the todos
+        // var activeTodos = this.props.todos.map(function(val) {
+        //     return val.completed = false;
+        // })
+
         // This.props.ontoggle is passed up to the parent
+        // Should render nothing to do if the todos length where they are completed
     	var renderTodos = () => {
-            if (todos.length === 0) {
+
+            var filteredTodos = TodoAPI.filterTodos(todos, showCompleted, searchText, sort);
+            
+            if (filteredTodos.length === 0) {
                 return <p className="container_message">Nothing To Do</p>
             } else {
-        return TodoAPI.filterTodos(todos, showCompleted, searchText, sort).map((todo) => {
+        return filteredTodos.map((todo) => {
             return (
                     <Todo key={todo.id} {...todo} />
                 )
         })
             }
     	};
-
-
-
 
         return (
             <div>

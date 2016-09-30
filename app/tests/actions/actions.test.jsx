@@ -101,15 +101,19 @@ describe('Actions', () => {
 		var testTodoRef;
 
 		beforeEach((done) => {
-			testTodoRef = firebaseRef.child('todos').push();
-
-			testTodoRef.set({
-				text: 'Something todo',
-				completed: false,
-				createdAt: 4342344
-			}).then(function(success){
-				done();
-			})	
+			var todosRef = firebaseRef.child('todos');
+			
+			todosRef.remove().then(() => {
+				testTodoRef = firebaseRef.child('todos').push();
+				
+				return testTodoRef.set({
+					text: 'Something todo',
+					completed: false,
+					createdAt: 4342344
+				})
+		})
+			.then(() => done())
+			.catch(done);
 		})
 
 		afterEach((done) => {
@@ -118,6 +122,25 @@ describe('Actions', () => {
 			})
 
 		})
+
+		// When I call start add todos, I get my one todo back
+		// dispatch the startAddtodos action, then verify on the mock
+		// store the actions that were dispatched (addtodos, todosarray 1 item)
+		// also verify the text
+
+		it('when I startAddTodos, I get one back', (done) => {
+			const store = createMockStore();
+			const action = actions.startAddTodos() // no args
+
+			store.dispatch(action).then(function(val) {
+				const mockActions = store.getActions();
+				expect(mockActions[0]).toEqual('ADD_TODOS');
+				expect(mockActions[0].todos.length).toEqual(1);
+				expect(mockActions[0].todos[0].text).toEqual('Somethingi todo');
+				}, done)
+			done()
+			})
+
 
 		it('should toggle todo and dispatch UPDATE_TODO action', (done) => {
 			const store = createMockStore();
