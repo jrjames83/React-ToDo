@@ -51,7 +51,6 @@ module.exports = {
 		// handle sorted by created at, using the sorted arg, which will be true if desired 
 
 		if (sorted) {
-			console.log("attempting to sort at least from the last function")
 			filterTodos.sort(function(a,b) {
 				return b.createdAt - a.createdAt
 			})

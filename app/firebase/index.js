@@ -11,7 +11,6 @@ try {
 		storageBucket: process.env.STORAGE_BUCKET
 	};
 
-	console.log(config);
 
 	firebase.initializeApp(config);
 
@@ -25,5 +24,6 @@ try {
 
 // set wipes all the data at the current reference
 
+export var githubProvider = new firebase.auth.GithubAuthProvider();
 export var firebaseRef = firebase.database().ref();
 export default firebase; // Root library to clean-up files

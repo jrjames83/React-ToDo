@@ -1,13 +1,31 @@
 var React = require('react');
 var ReactDOM = require('react-dom');
 var {Provider} = require('react-redux');
-var TodoApp = require('TodoApp');
+//var TodoApp = require('TodoApp');
+import TodoApp from 'TodoApp'
 var {Route, Router, IndexRoute, hashHistory} = require('react-router');
 
 var actions = require('actions');
 var store = require('configureStore').configure(); // returns store
 var TodoAPI = require('TodoAPI');
+//var Login = require('Login');
+import Login from 'Login';
+import firebase from 'app/firebase/';
 
+import router from 'app/router/';
+
+firebase.auth().onAuthStateChanged((user) => {
+	if(user) {
+		hashHistory.push('/todos');
+	} else {
+		hashHistory.push('/');
+	}
+})
+
+
+
+// Morning Challenge - Login page component
+// Then add the route - index = login, then a route for /todos
 
 // store.subscribe(() => {
 // 	var state = store.getState();
@@ -54,9 +72,18 @@ http://api.openweathermap.org/data/2.5/weather
 //   document.getElementById('app')
 // );
 
+
+
+
 ReactDOM.render(
 	<Provider store={store}>
-		<TodoApp />
+	 {router}
 	</Provider>,
 	document.getElementById('app')
-	)
+)
+
+
+
+
+
+

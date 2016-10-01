@@ -1,6 +1,7 @@
-import firebase, {firebaseRef} from 'app/firebase/index';
-import moment from 'moment';
+import firebase, {firebaseRef, githubProvider} from 'app/firebase/index';
+var moment = require('moment');
 import uuid from 'node-uuid';
+
 
 
 export var setSearchText = (searchText) => {
@@ -64,7 +65,6 @@ export var startEditTodo = (id, text) => {
 			text: text
 		}
 		return todoRef.update(updates).then(function(value) {
-			console.log("Updated");
 			dispatch(editTodo(id, updates))
 		}, function(er) {
 			console.log(er);
@@ -72,17 +72,21 @@ export var startEditTodo = (id, text) => {
 	} 
 }
 
+// There's a bug here, it references the incorrect id
 export var startToggleTodo = (id, completed) => {
+	console.log('Toggling todo', id, completed)
 	return (dispatch, getState) => {
 		var todoRef = firebaseRef.child(`/todos/${id}`);
 		var updates = {
 			completed: completed,
-			completedAt: completed ? moment().unix() : undefined
+			completedAt: completed ? moment().unix() : null
 		}
 
 		return todoRef.update(updates).then(function(val) {
 			//dispatch action to update redux
 			dispatch(updateTodo(id, updates))
+		}, function(er) {
+			console.log(er, updates);
 		})
 	}
 }
@@ -125,6 +129,25 @@ export var sortTodos = () => {
 	}
 }
 
+export var startLogin = () => {
+	return (dispatch, getState) => {
+		return firebase.auth().signInWithPopup(githubProvider).then((result) => {
+			console.log(result, "auth worked");
+		}, (err) => {
+			console.log(err, "error occurred")
+		})
+	}
+}
+
+export var startLogout = () => {
+	return (dispatch, getState) => {
+		return firebase.auth().signOut().then(() => {
+			console.log('Logged out')
+		}, (err) => {
+			console.log(err)
+		})
+	}
+}
 
 
 // toggleTodo(id) TOGGLE_TODO
@@ -132,6 +155,7 @@ export var sortTodos = () => {
 	Handle in firebase and pass down to state
 */
 export var updateTodo = (id, updates) => {
+	console.log(id, updates)
 	return {
 		type: 'UPDATE_TODO',
 		id,
