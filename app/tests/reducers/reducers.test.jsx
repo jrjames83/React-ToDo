@@ -97,6 +97,24 @@ describe('Reducers', () => {
 			
 		})
 
+
+		it('should wipe todos on logout', () => {			
+
+			var sampleTodo = [{
+							  id:1, 
+							  text: 'walk', 
+							  completed: false, 
+							  createdAt: moment().unix(),
+							  completedAt: undefined
+							}];
+			var action = {
+				type: 'LOGOUT' // doesnt take other args
+			}
+			var res = reducers.todosReducer(df(sampleTodo), df(action));
+			expect(res.length).toEqual(0);
+			
+		})
+
 		it('should store UID on LOGIN', () => {
 			const action = {
 				type: 'LOGIN',

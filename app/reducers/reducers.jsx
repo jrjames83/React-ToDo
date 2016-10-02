@@ -10,7 +10,9 @@ export var authReducer = (state = {}, action) => {
 			}
 		
 		case 'LOGOUT':
-			return {};
+			return {
+				
+			};
 		
 		default:
 			return state;
@@ -101,6 +103,9 @@ export var todosReducer = (state = [], action) => {
 					...state,
 					...action.todos
 				]
+
+			case 'LOGOUT':
+				return []; // when I logout, remove my todos
 
 		default:
 			return state;
