@@ -18,7 +18,6 @@ no params
 
 
 export var login = (uid) => {
-
 	return {
 		type: 'LOGIN',
 		uid: uid
@@ -57,7 +56,8 @@ export var addTodos = (todos) => {
 
 export var startAddTodos = () => {
 	return (dispatch, getState) => {
-		var todosRef = firebaseRef.child('todos');
+		var uid = getState().auth.uid;
+		var todosRef = firebaseRef.child(`users/${uid}/todos`);
 
 		return todosRef.once('value').then(function(snapshot) {
 			var todos = snapshot.val() || {};
@@ -90,7 +90,8 @@ export var startAddTodos = () => {
 // Testing one specific to do - now just need to fix the id
 export var startEditTodo = (id, text) => {
 	return (dispatch, getState) => {
-		var todoRef = firebaseRef.child(`/todos/${id}`);
+		var uid = getState().auth.uid;
+		var todoRef = firebaseRef.child(`users/${uid}/todos/${id}`);
 		var updates = {
 			text: text
 		}
@@ -106,7 +107,8 @@ export var startEditTodo = (id, text) => {
 export var startToggleTodo = (id, completed) => {
 	console.log('Toggling todo', id, completed)
 	return (dispatch, getState) => {
-		var todoRef = firebaseRef.child(`/todos/${id}`);
+		var uid = getState().auth.uid;
+		var todoRef = firebaseRef.child(`users/${uid}/todos/${id}`);
 		var updates = {
 			completed: completed,
 			completedAt: completed ? moment().unix() : null
@@ -130,8 +132,9 @@ export var startAddTodo = (text) => {
 					createdAt: moment().unix(),
 					completedAt: null
 				}
-		// Now in firebase		
-		var todoRef = firebaseRef.child('todos').push(todo);
+		// Now in firebase
+		var uid = getState().auth.uid;	
+		var todoRef = firebaseRef.child(`users/${uid}/todos`).push(todo);
 
 		// we add the data to firebase here, but then still kickoff
 		// The traditional call to addTodo, overiding the key with the FB
