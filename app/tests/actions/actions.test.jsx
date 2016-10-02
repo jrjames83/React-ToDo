@@ -22,6 +22,24 @@ describe('Actions', () => {
 		expect(res).toEqual(action);
 	})
 
+	if('should generate a login action object', () => {
+		var action = {
+			type: 'LOGIN',
+			uid: '12345'
+		}
+
+		const res = actions.login(action.uid);
+		expect(res).toEqual(action);
+	})
+
+	if('should generate a logout action object', () => {
+		var action = {
+			type: 'LOGOUT'
+		}
+
+		const res = actions.logout(action.uid);
+		expect(res).toEqual(action);
+	})
 
 	it('should generate add todo action', () => {
 		var action = {

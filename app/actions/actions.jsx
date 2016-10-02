@@ -3,6 +3,36 @@ var moment = require('moment');
 import uuid from 'node-uuid';
 
 
+/*
+
+Create 2 actions
+type: LOGIN
+uid: someuid
+
+type: LOGOUT
+no params
+
+...then make an auth reducer that responds to login and logout
+*/
+
+
+
+export var login = (uid) => {
+
+	return {
+		type: 'LOGIN',
+		uid: uid
+	}
+}
+
+export var logout = () => {
+	return {
+		type: 'LOGOUT'	
+	}
+
+}
+
+
 
 export var setSearchText = (searchText) => {
 	return {

@@ -2,6 +2,22 @@ var uuid = require('node-uuid');
 var moment = require('moment');
 
 
+export var authReducer = (state = {}, action) => {
+	switch(action.type) {
+		case 'LOGIN':
+			return {
+				uid: action.uid
+			}
+		
+		case 'LOGOUT':
+			return {};
+		
+		default:
+			return state;
+	}   
+}
+
+
 // This will be for the search text box
 export var searchTextReducer = (state = '', action) => {
 	//action.something = 2; check that deep freeze fails test
@@ -63,21 +79,21 @@ export var todosReducer = (state = [], action) => {
 
 
 		case 'EDIT_TODO':
-					return state.map(function(todo) {
-						// action.id is coming off the action
-		    		if (todo.id === action.id) {
-		    			var updatedText = action.text
+			return state.map(function(todo) {
+				// action.id is coming off the action
+    		if (todo.id === action.id) {
+    			var updatedText = action.text
 
-		    			return {
-		    				...todo,
-		    				// this is an object (updates)
-		    				...action.updates
-		    				
-		    			}
-		    		} else {
-		    			return todo;
-		    		}
-		    	}) // end toggle
+    			return {
+    				...todo,
+    				// this is an object (updates)
+    				...action.updates
+    				
+    			}
+    		} else {
+    			return todo;
+    		}
+    	}) // end toggle
 
 
 			case 'ADD_TODOS':
